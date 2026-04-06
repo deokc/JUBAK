@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주박만상 呪縛萬象</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-black: #050508;
+            --main-cyan: #00f2ff;
+            --sub-purple: #9d00ff;
+            --danger-red: #ff3c3c;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --neon-glow: 0 0 15px rgba(0, 242, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-black);
+            color: #e0e0e0;
+            font-family: 'Noto Serif KR', serif;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* --- 1. 배경 한자 (呪 縛 萬 象) --- */
+        .hanja-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.12;
+        }
+
+        .hanja-char {
+            position: absolute;
+            color: var(--main-cyan);
+            font-size: 4rem;
+            font-weight: 900;
+            filter: blur(1px);
+            animation: floatHanja 15s linear infinite;
+        }
+
+        @keyframes floatHanja {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- 2. 사이드바 내비게이션 --- */
+        aside {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            padding: 4rem 2rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo { font-size: 2.2rem; font-weight: 900; margin-bottom: 5rem; text-shadow: var(--neon-glow); color: #fff; }
+        .logo span { display: block; font-size: 0.8rem; color: var(--main-cyan); letter-spacing: 4px; margin-top: 8px; }
+
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item {
+            margin-bottom: 2.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #888;
+            transition: 0.3s;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .nav-item:hover, .nav-item.active { color: #fff; text-shadow: var(--neon-glow); transform: translateX(5px); }
+        .nav-item::before { content: '◈'; font-size: 0.7rem; color: var(--main-cyan); opacity: 0; transition: 0.3s; }
+        .nav-item:hover::before, .nav-item.active::before { opacity: 1; }
+
+        /* BGM 플레이어 스타일 */
+        .music-player {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .music-info { font-size: 0.7rem; color: var(--main-cyan); margin-bottom: 10px; letter-spacing: 1px; opacity: 0.8; }
+        .controls { display: flex; align-items: center; gap: 10px; }
+        #play-btn { 
+            background: rgba(255,255,255,0.05); border: 1px solid var(--main-cyan); color: #fff; 
+            padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 0.7rem; transition: 0.3s;
+        }
+        #play-btn:hover { background: var(--main-cyan); color: #000; }
+        #volume-slider { width: 100%; height: 3px; accent-color: var(--main-cyan); cursor: pointer; }
+
+        /* --- 3. 메인 콘텐츠 --- */
+        main { margin-left: 280px; width: calc(100% - 280px); padding: 5rem; min-height: 100vh; }
+        .content-section { display: none; animation: fadeIn 0.6s ease forwards; }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2.section-title { font-size: 3rem; margin-bottom: 3rem; border-left: 4px solid var(--main-cyan); padding-left: 20px; }
+        h3.sub-title { font-size: 1.8rem; margin: 4rem 0 2rem 0; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        /* 세계관 설정 스타일 */
+        .world-image-container {
+            width: 100%; height: 450px;
+            background: #111; margin-bottom: 3rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+        }
+        .world-image-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .glass-card { background: var(--glass); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; transition: 0.3s; }
+        .glass-card:hover { border-color: var(--main-cyan); background: rgba(255,255,255,0.05); }
+        .glass-card h3 { color: var(--main-cyan); margin-bottom: 1rem; font-size: 1.4rem; }
+        .glass-card p { line-height: 1.7; color: #bbb; font-size: 0.95rem; }
+
+        /* 능력 및 시스템 */
+        .system-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .system-node {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent);
+            border: 1px solid var(--border); padding: 2rem; border-radius: 15px; position: relative; overflow: hidden; transition: 0.4s;
+        }
+        .system-node:hover { border-color: var(--main-cyan); transform: scale(1.02); }
+        .node-tag { font-size: 0.7rem; color: var(--main-cyan); border: 1px solid var(--main-cyan); padding: 2px 8px; border-radius: 20px; margin-bottom: 15px; display: inline-block; }
+        .node-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
+        .node-effect { font-size: 0.85rem; color: #888; margin-bottom: 15px; border-top: 1px solid var(--border); padding-top: 10px; font-style: italic; }
+        .node-warning { color: var(--danger-red); font-size: 0.8rem; margin-top: 10px; font-weight: bold; }
+
+        .sync-box { margin-top: 3rem; background: rgba(0, 242, 255, 0.05); border: 1px dashed var(--main-cyan); padding: 2.5rem; border-radius: 12px; }
+
+        /* 악귀 등급 스타일 */
+        .grade-card { display: flex; gap: 30px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 25px; overflow: hidden; align-items: center; transition: 0.3s; }
+        .grade-card:hover { border-color: var(--main-cyan); }
+        .grade-img { width: 180px; height: 180px; background: #111; flex-shrink: 0; }
+        .grade-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .grade-info { padding: 1.5rem; }
+        .grade-label { font-weight: 900; font-size: 1.6rem; margin-bottom: 8px; display: block; color: var(--main-cyan); }
+        .grade-label.danger { color: var(--danger-red); text-shadow: 0 0 10px rgba(255, 60, 60, 0.5); }
+
+        /* 등장인물 */
+        .filter-bar { display: flex; gap: 15px; margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .filter-btn { background: none; border: none; color: #666; font-family: inherit; font-size: 1rem; cursor: pointer; transition: 0.3s; padding: 5px 15px; }
+        .filter-btn:hover, .filter-btn.active { color: var(--main-cyan); font-weight: bold; }
+
+        .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+        .char-card { background: #0f0f12; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.4s; }
+        .char-card:hover { border-color: var(--sub-purple); transform: translateY(-10px); }
+        .char-thumb { width: 100%; aspect-ratio: 1 / 1; background: #1a1a1f; position: relative; overflow: hidden; }
+        .char-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .char-card-info { padding: 1.5rem; text-align: center; }
+        .char-card-name { font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
+        .char-card-faction { font-size: 0.8rem; color: var(--main-cyan); letter-spacing: 1px; }
+
+        /* 캐릭터 상세 모달 */
+        #char-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); z-index: 2000; display: none; justify-content: center; align-items: center; }
+        #char-modal.active { display: flex; }
+        .modal-box { width: 90%; max-width: 1100px; height: 550px; background: #0a0a0d; border: 1px solid var(--border); display: flex; border-radius: 4px; overflow: hidden; position: relative; }
+        .modal-img-area { width: 550px; height: 550px; flex-shrink: 0; background: #15151a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .modal-img-area img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-info-area { flex: 1; padding: 3rem 4rem; overflow-y: auto; background: linear-gradient(to right, #0a0a0d, #0d0d12); position: relative; }
+        .m-name { font-size: 3rem; font-weight: 900; margin-bottom: 2rem; color: #fff; line-height: 1.1; }
+        .m-block { margin-bottom: 1.8rem; }
+        .m-label { font-size: 0.7rem; color: #555; text-transform: uppercase; display: block; margin-bottom: 6px; letter-spacing: 1px; }
+        .m-value { font-size: 0.95rem; color: #ccc; line-height: 1.6; }
+        .m-quote { border-left: 2px solid var(--danger-red); padding-left: 20px; font-style: italic; color: #fff; font-size: 1.1rem; margin-top: 2rem; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #444; z-index: 10; transition: 0.3s; }
+        .close-btn:hover { color: #fff; }
+
+        /* 모바일 대응 */
+        @media (max-width: 1024px) {
+            body { flex-direction: column; }
+            aside {
+                width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border);
+                padding: 2rem;
+            }
+            .logo { margin-bottom: 2rem; text-align: center; }
+            .nav-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 1.5rem; }
+            .nav-item { margin-bottom: 0; font-size: 0.95rem; }
+            .music-player { padding-top: 1rem; border-top: 1px solid var(--border); }
+            
+            main { margin-left: 0; width: 100%; padding: 2.5rem 1.5rem; }
+            h2.section-title { font-size: 2.2rem; }
+            .world-image-container { height: 300px; }
+
+            .modal-box { flex-direction: column; height: 90vh; width: 95%; max-width: none; }
+            .modal-img-area { width: 100%; height: 450px; background: #000; }
+            .modal-img-area img { object-fit: contain; }
+            .modal-info-area { padding: 2rem; }
+            .m-name { font-size: 2rem; }
+
+            .grade-card { flex-direction: column; align-items: flex-start; gap: 0; }
+            .grade-img { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+            .grade-img img { object-fit: contain; opacity: 1; }
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--main-cyan); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="hanja-bg" id="hanja-container"></div>
+
+    <aside>
+        <div class="logo">주박만상 <span>呪縛萬象</span></div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchTab('world', this)">세계관 설정</li>
+            <li class="nav-item" onclick="switchTab('system', this)">능력 및 시스템</li>
+            <li class="nav-item" onclick="switchTab('grades', this)">악귀 등급</li>
+            <li class="nav-item" onclick="switchTab('characters', this)">등장인물</li>
+        </ul>
+
+        <!-- BGM 컨트롤러 영역 -->
+        <div class="music-player">
+            <div class="music-info">SYSTEM AUDIO</div>
+            <div class="controls">
+                <button id="play-btn" onclick="toggleMusic()">PLAY</button>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.5" oninput="setVolume(this.value)">
+            </div>
+            <audio id="bgm-audio" loop src="https://raw.githubusercontent.com/deokc/JUBAK/main/%EB%B2%A0%EC%9D%BC%20%EC%8B%9C%ED%8B%B0_01.mp3"></audio>
+        </div>
+    </aside>
+
+    <main>
+        <!-- 세계관 설정 -->
+        <section id="world" class="content-section active">
+            <h2 class="section-title">세계관 설정</h2>
+            <div class="world-image-container">
+                <img src="https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EB%B2%A0%EC%9D%BC01.png" alt="베일시티 전경">
+            </div>
+            
+            <div class="info-grid">
+                <div class="glass-card">
+                    <h3>🌃 베일시티 (Veil City)</h3>
+                    <p>2000년대, 원인 모를 영적 균열이 발생하며 '이계'와 겹쳐진 도시입니다. 낮에는 평범한 현대 도시의 모습을 띠지만, 밤이 되면 그림자 속에 숨어있던 악귀들이 모습을 드러냅니다.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>🌑 박명(薄明)의 시간</h3>
+                    <p>현실과 이계가 겹치는 찰나의 시간. 도심 곳곳에 발생하는 '영도(靈道)'를 봉쇄하지 못하면 도시는 악귀들의 사냥터가 됩니다.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>⚖️ 퇴마와 제령</h3>
+                    <p>악귀을 대하는 두 가지 방식입니다. <strong>퇴마</strong>는 영적 파괴를 통해 악귀를 즉각 소멸시키는 효율적인 방식이나 시전자에게 '잔(穢)'을 남깁니다. <strong>제령</strong>은 원한을 정화해 성불시키는 평화적 방식이나 훨씬 강력한 영력과 시간이 소요됩니다.</p>
+                </div>
+            </div>
+
+            <h3 class="sub-title">주요 조직</h3>
+            <div class="info-grid">
+                <div class="glass-card">
+                    <h3>🏛️ 영대위</h3>
+                    <p><strong>영재해대책위원회.</strong> 정부 직속 기관으로 도심의 균열을 관리하고 악귀를 토벌합니다. 강력한 자본과 기술력을 바탕으로 규격화된 무구와 서포트를 주박사들에게 제공합니다.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>🧥 프리랜서</h3>
+                    <p>어디에도 소속되지 않고 영대위에 등록만 하고 독자적으로 활동하는 자들입니다. </p>
+                </div>
+                <div class="glass-card">
+                    <h3>🏮 아나키스트</h3>
+                    <p>영적 균열을 '인류의 진화'라 믿는 위험 집단입니다. 공포와 원한을 억누르는 게 아니라 오히려 극대화하여 더 강력한 '령태'를 만들어내는 것이 진정한 신인류로 가는 길이라 믿습니다.</p>
+                </div>
+            </div>
+
+            <h3 class="sub-title">핵심 요소</h3>
+            <div class="info-grid">
+                <div class="glass-card" style="border-left: 3px solid var(--main-cyan);">
+                    <h3>🗡️ 무구 (巫具)</h3>
+                    <p>주박사의 힘의 근원이자 상징입니다. 능력 계통에 따라 형태가 다르게 나타납니다. (예:강화계는 신체나 근육, 변이계는 눈이나 입 등)</p>
+                </div>
+                <div class="glass-card" style="border-left: 3px solid var(--sub-purple);">
+                    <h3>👻 령태 (靈胎)</h3>
+                    <p>악귀와 융합된 인간을 뜻합니다. 악귀의 강력한 영력과 그 원초적인 권능을 받아들였으며 햇빛에 약하다는 특징이 있습니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 능력 및 시스템 -->
+        <section id="system" class="content-section">
+            <h2 class="section-title">능력 및 시스템</h2>
+            <div class="system-visual-grid">
+                <div class="system-node">
+                    <span class="node-tag">TYPE-A</span>
+                    <div class="node-title">구현계</div>
+                    <div class="node-effect">영력을 실체화하여 물리적 무기를 형성</div>
+                    <p>사용자의 정신적 이미지에 따라 무구의 형태가 결정됩니다. 파괴력이 가장 직관적이며 가장 보편적인 계통입니다.</p>
+                </div>
+                <div class="system-node">
+                    <span class="node-tag">TYPE-B</span>
+                    <div class="node-title">간섭계</div>
+                    <div class="node-effect">현실 세계의 물리 법칙과 인과율 왜곡</div>
+                    <p>중력 제어, 공간 이동 등 환경 자체를 무기로 삼습니다. 넓은 범위를 통제하지만 극심한 영적 탈진을 동반합니다.</p>
+                </div>
+                <div class="system-node">
+                    <span class="node-tag">TYPE-C</span>
+                    <div class="node-title">강화계</div>
+                    <div class="node-effect">신체적 한계를 영력으로 극대화</div>
+                    <p>무기 없이 육체 자체를 강화합니다. 반응 속도, 근력, 재생력이 비약적으로 상승하며 근접 전투에서 압도적입니다.</p>
+                </div>
+                <div class="system-node">
+                    <span class="node-tag">TYPE-D</span>
+                    <div class="node-title">사역계</div>
+                    <div class="node-effect">식신이나 영적 생명체를 소환하여 운용</div>
+                    <p>영력으로 빚은 독립 개체를 부립니다. 다대다 전투에 유리합니다.</p>
+                </div>
+                <div class="system-node" style="border-color: var(--danger-red);">
+                    <span class="node-tag" style="color: var(--danger-red); border-color: var(--danger-red);">TYPE-E</span>
+                    <div class="node-title" style="color: var(--danger-red);">변이계</div>
+                    <div class="node-effect">신체의 일부가 악귀화되거나 이형으로 변화</div>
+                    <p>신체 기관을 통해 악귀의 권능을 직접 현실에 투사합니다. 주로 령태가 여기에 해당됩니다.</p>
+                    <div class="node-warning">⚠️ 경고: 비가역적 괴물화 진행 주의</div>
+                </div>
+            </div>
+
+            <div class="sync-box">
+                <h3 style="color: var(--main-cyan); margin-bottom: 1rem;">동조율 (Sync Rate)</h3>
+                <p style="line-height: 1.8; color: #ccc;">주박사와 무구 사이의 정신적 연결 정도입니다. 동조율이 높을수록 무구의 본래 성능을 100% 이상 끌어내어 강력한 비기를 구사할 수 있습니다.</p>
+            </div>
+        </section>
+
+        <!-- 악귀 등급 -->
+        <section id="grades" class="content-section">
+            <h2 class="section-title">악귀 등급</h2>
+            <div class="grade-card">
+                <div class="grade-img"><img src="https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%9E%94%EC%98%8801.png" alt="잔예급"></div>
+                <div class="grade-info">
+                    <span class="grade-label">잔예급</span>
+                    <p>찌꺼기 수준의 영기. 일반인에게는 오한이나 불쾌감을 주는 정도이나, 방치할 경우 사고의 원인이 됩니다.</p>
+                </div>
+            </div>
+            <div class="grade-card">
+                <div class="grade-img"><img src="https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EA%B5%AD%EC%86%8C01.png" alt="국소급"></div>
+                <div class="grade-info">
+                    <span class="grade-label">국소급</span>
+                    <p>특정 건물이나 좁은 구역을 점유함. 물리적인 피해를 입힐 수 있으며 전문 주박사의 파견이 필요합니다.</p>
+                </div>
+            </div>
+            <div class="grade-card">
+                <div class="grade-img"><img src="https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EA%B4%91%EC%97%AD01.png" alt="광역급"></div>
+                <div class="grade-info">
+                    <span class="grade-label">광역급</span>
+                    <p>동네 전체나 대형 랜드마크를 뒤덮는 영기를 내뿜음. 대규모 결계 작전과 영대위 정예 요원들이 투입되어야 합니다.</p>
+                </div>
+            </div>
+            <div class="grade-card" style="border-color: var(--danger-red);">
+                <div class="grade-img"><img src="https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EB%B6%95%EA%B4%B401.png" alt="붕괴급"></div>
+                <div class="grade-info">
+                    <span class="grade-label danger">붕괴급</span>
+                    <p>현실과 이계의 경계를 허물어 도시 한복판에 거대한 '영도'를 고정함. 도시 존립 자체를 위협하는 재앙 수준입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 등장인물 -->
+        <section id="characters" class="content-section">
+            <h2 class="section-title">등장인물</h2>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterChars('all', this)">ALL</button>
+                <button class="filter-btn" onclick="filterChars('영대위', this)">영대위</button>
+                <button class="filter-btn" onclick="filterChars('프리랜서', this)">프리랜서</button>
+                <button class="filter-btn" onclick="filterChars('아나키스트', this)">아나키스트</button>
+            </div>
+            <div id="char-grid" class="char-grid"></div>
+        </section>
+    </main>
+
+    <!-- 캐릭터 상세 모달 -->
+    <div id="char-modal">
+        <div class="modal-box">
+            <div class="close-btn" onclick="closeModal()">&times;</div>
+            <div class="modal-img-area"><img id="m-img" src="" alt="Portrait"></div>
+            <div class="modal-info-area">
+                <span id="m-faction" style="color:var(--main-cyan); font-weight:bold; letter-spacing:2px;"></span>
+                <h2 id="m-name" class="m-name"></h2>
+                <div class="m-block"><span class="m-label">Ability Type</span><div id="m-type" class="m-value"></div></div>
+                <div class="m-block"><span class="m-label">Age / Physical / Appearance</span><div id="m-looks" class="m-value"></div></div>
+                <div class="m-block"><span class="m-label">Personality</span><div id="m-personality" class="m-value"></div></div>
+                <div id="m-quote" class="m-quote"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 한자 애니메이션
+        const hanjaList = ['呪', '縛', '萬', '象'];
+        const container = document.getElementById('hanja-container');
+        function spawnHanja() {
+            const h = document.createElement('div');
+            h.className = 'hanja-char';
+            h.innerText = hanjaList[Math.floor(Math.random() * hanjaList.length)];
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 8 + 12) + 's';
+            h.style.fontSize = (Math.random() * 3 + 2) + 'rem';
+            container.appendChild(h);
+            setTimeout(() => h.remove(), 15000);
+        }
+        setInterval(spawnHanja, 1000);
+
+        // 2. 탭 제어
+        function switchTab(id, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 3. BGM 제어 (수정됨: 첫 클릭 시 자동 재생 추가)
+        const audio = document.getElementById('bgm-audio');
+        const playBtn = document.getElementById('play-btn');
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play().catch(e => console.log("재생 오류:", e));
+                playBtn.innerText = "PAUSE";
+            } else {
+                audio.pause();
+                playBtn.innerText = "PLAY";
+            }
+        }
+
+        // 브라우저 정책상 첫 클릭 후 자동 재생
+        document.addEventListener('click', function startBGM() {
+            if (audio.paused) {
+                toggleMusic();
+            }
+            document.removeEventListener('click', startBGM);
+        }, { once: true });
+
+        function setVolume(val) { audio.volume = val; }
+
+        // 4. 캐릭터 데이터
+        const charData = [
+            { name: "설도진", faction: "영대위", type: "구현계 (카타나)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%84%A4%EB%8F%84%EC%A7%8401.png", looks: "28세 / 181cm / 흑발 흰 브릿지 / 황안", personality: "냉소적 완벽주의. 싸가지 없음.", quote: "뒤지기 싫으면 비켜. 그냥 베면 되잖아." },
+            { name: "녹영", faction: "영대위", type: "간섭계", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EB%85%B9%EC%98%8101.png", looks: "29세 / 178cm / 흑발 / 녹안 / 다크써클", personality: "항상 무표정. 정중하지만 서늘한 살기.", quote: "…그만 움직이세요. 추하니까." },
+            { name: "하즈키 세이", faction: "영대위", type: "사역계 (뱀 식신)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%84%B8%EC%9D%B401.png", looks: "27세 / 158cm / 흑발 연갈색 브릿지 / 호박색 눈", personality: "쾌활하고 긍정적인 에너지.", quote: "자, 다들 기운 내서 퇴치해 볼까요?" },
+            { name: "비올레타", faction: "영대위", type: "구현계 (채찍)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EB%B9%84%EC%98%AC%EB%A0%88%ED%83%8001.png", looks: "31세 / 177cm / 보라색 올림머리 / 분홍안", personality: "나른하고 관능적인 카리스마. 여유로운 강심장.", quote: "음~ 오늘 공기가 참 좋네? 악귀 썩는 냄새가 아주 향긋해." },
+            { name: "황보재이", faction: "영대위", type: "변이계 (영태 靈胎)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%9E%AC%EC%9D%B401.png", looks: "미상 / 185cm / 잿빛 장발 / 흑안", personality: "령태. 우호적이고 배려심 깊음. 엉뚱한 비유.", quote: "당신이 숨기고 싶어 하던 그 실마리를 찾았습니다." },
+            { name: "안이언", faction: "프리랜서", type: "구현계 (창)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%95%88%EC%9D%B4%EC%96%B801.png", looks: "25세 / 168cm / 흑발 파란 브릿지 / 자안", personality: "자유분방하고 털털함.", quote: "그냥 깔끔하게 돈 받고 일 끝내주면 되는 거 아냐?" },
+            { name: "얀시", faction: "프리랜서", type: "구현계 (카타나)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%96%80%EC%8B%9C01.png", looks: "26세 / 164cm / 흑발과 라이트 블루 투톤 / 벽안", personality: "차갑고 건조함. 무구를 친구처럼 생각함.", quote: "…느려. 그 정도 원한으로 누굴 죽이겠다는 거야." },
+            { name: "하이픈", faction: "프리랜서", type: "강화계", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%ED%95%98%EC%9D%B4%ED%94%8801.png", looks: "21세 / 150cm / 백발 포니테일 / 백안", personality: "무뚝뚝하고 말솜씨가 서툴음.", quote: "...됐고, 위험하니까 빨리 도망가." },
+            { name: "하즈키 켄타", faction: "아나키스트", type: "사역계(여우 식신)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%BC%84%ED%83%8001.png", looks: "30세 / 180cm / 연갈색 짧은 머리 / 여우 가면", personality: "냉정한 전략가. 선민사상.", quote: "당신들의 정의감으로 비추기엔 너무 어둡죠." },
+            { name: "러스트", faction: "아나키스트", type: "강화계", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EB%9F%AC%EC%8A%A4%ED%8A%B801.png", looks: "22세 / 160cm / 금발 죽순머리 / 녹안", personality: "전투광. 강자와의 싸움을 즐김.", quote: "어이! 나랑 딱 한 판만 뜨자!" },
+            { name: "칭", faction: "아나키스트", type: "변이계 (영태 靈胎)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%B9%AD01.png", looks: "미상 / 152cm / 흑발 양갈래 / 안대", personality: "령태. 말이 없음. 손짓 소통.", quote: "(묵묵히 안대 너머로 응시한다)" }
+        ];
+
+        // 5. 캐릭터 렌더링
+        const grid = document.getElementById('char-grid');
+        function renderChars(filter = 'all') {
+            grid.innerHTML = '';
+            charData.forEach((c) => {
+                if (filter !== 'all' && c.faction !== filter) return;
+                const card = document.createElement('div');
+                card.className = 'char-card';
+                card.innerHTML = `<div class="char-thumb"><img src="${c.img}" alt="${c.name}"></div><div class="char-card-info"><div class="char-card-faction">${c.faction}</div><div class="char-card-name">${c.name}</div></div>`;
+                card.onclick = () => openModal(c);
+                grid.appendChild(card);
+            });
+        }
+
+        function filterChars(faction, el) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            renderChars(faction);
+        }
+
+        // 6. 모달 제어
+        const modal = document.getElementById('char-modal');
+        function openModal(data) {
+            document.getElementById('m-img').src = data.img;
+            document.getElementById('m-name').innerText = data.name;
+            document.getElementById('m-faction').innerText = data.faction;
+            document.getElementById('m-type').innerText = data.type;
+            document.getElementById('m-looks').innerText = data.looks;
+            document.getElementById('m-personality').innerText = data.personality;
+            document.getElementById('m-quote').innerText = `"${data.quote}"`;
+            modal.classList.add('active');
+        }
+        function closeModal() { modal.classList.remove('active'); }
+
+        renderChars();
+    </script>
+</body>
+</html>
