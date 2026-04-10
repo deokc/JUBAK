@@ -17,6 +17,77 @@
             --neon-glow: 0 0 15px rgba(0, 242, 255, 0.3);
         }
 
+        /* --- 인트로 화면 스타일 --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease;
+        }
+        .intro-hanja-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0.15;
+            overflow: hidden;
+        }
+        #intro-title {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2rem;
+            margin-bottom: 0.5rem; /* 간격 조정 */
+            position: relative;
+            z-index: 10;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            margin-left: 2rem; /* letter-spacing으로 인한 비대칭 보정 */
+        }
+        /* 추가된 한자 서브타이틀 스타일 */
+        #intro-subtitle {
+            font-size: 1.2rem;
+            color: #fff;
+            letter-spacing: 1.5rem;
+            margin-bottom: 3.5rem;
+            z-index: 10;
+            opacity: 0.6;
+            font-weight: 400;
+            margin-left: 1.5rem;
+        }
+
+        .burning {
+            animation: burn-out 1.8s forwards ease-in;
+        }
+        @keyframes burn-out {
+            0% { transform: scale(1); filter: brightness(1); }
+            30% { color: #ff4e00; text-shadow: 0 0 20px #ff4e00, 0 0 40px #ff0000; transform: scale(1.05); }
+            60% { color: #550000; filter: blur(2px) brightness(1.2); opacity: 0.7; }
+            100% { transform: scale(1.1) translateY(-20px); filter: blur(20px) brightness(0); opacity: 0; }
+        }
+
+        .enter-btn {
+            background: none;
+            border: 1px solid var(--main-cyan);
+            color: var(--main-cyan);
+            padding: 15px 60px;
+            font-size: 1.2rem;
+            font-family: inherit;
+            cursor: pointer;
+            letter-spacing: 8px;
+            transition: 0.4s;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+        .enter-btn:hover {
+            background: var(--main-cyan);
+            color: #000;
+            box-shadow: 0 0 30px var(--main-cyan);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: var(--bg-black);
@@ -26,7 +97,7 @@
             display: flex;
         }
 
-        /* --- 1. 배경 한자 (呪 縛 萬 象) --- */
+        /* --- 배경 한자 애니메이션 --- */
         .hanja-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -35,7 +106,6 @@
             pointer-events: none;
             opacity: 0.12;
         }
-
         .hanja-char {
             position: absolute;
             color: var(--main-cyan);
@@ -44,7 +114,6 @@
             filter: blur(1px);
             animation: floatHanja 15s linear infinite;
         }
-
         @keyframes floatHanja {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
             20% { opacity: 1; }
@@ -52,67 +121,42 @@
             100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- 2. 사이드바 내비게이션 --- */
+        /* --- 사이드바 --- */
         aside {
-            width: 280px;
-            height: 100vh;
-            position: fixed;
-            left: 0; top: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border);
-            padding: 4rem 2rem;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
+            width: 280px; height: 100vh; position: fixed;
+            left: 0; top: 0; background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px); border-right: 1px solid var(--border);
+            padding: 4rem 2rem; z-index: 100; display: flex; flex-direction: column;
         }
-
         .logo { font-size: 2.2rem; font-weight: 900; margin-bottom: 5rem; text-shadow: var(--neon-glow); color: #fff; }
         .logo span { display: block; font-size: 0.8rem; color: var(--main-cyan); letter-spacing: 4px; margin-top: 8px; }
 
         .nav-menu { list-style: none; flex-grow: 1; }
         .nav-item {
-            margin-bottom: 2.5rem;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: #888;
-            transition: 0.3s;
-            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 2.5rem; cursor: pointer; font-size: 1.1rem; color: #888;
+            transition: 0.3s; display: flex; align-items: center; gap: 12px;
         }
         .nav-item:hover, .nav-item.active { color: #fff; text-shadow: var(--neon-glow); transform: translateX(5px); }
         .nav-item::before { content: '◈'; font-size: 0.7rem; color: var(--main-cyan); opacity: 0; transition: 0.3s; }
         .nav-item:hover::before, .nav-item.active::before { opacity: 1; }
 
-        /* BGM 플레이어 스타일 */
-        .music-player {
-            margin-top: auto;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-        }
+        .music-player { margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border); }
         .music-info { font-size: 0.7rem; color: var(--main-cyan); margin-bottom: 10px; letter-spacing: 1px; opacity: 0.8; }
         .controls { display: flex; align-items: center; gap: 10px; }
-        #play-btn { 
-            background: rgba(255,255,255,0.05); border: 1px solid var(--main-cyan); color: #fff; 
-            padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 0.7rem; transition: 0.3s;
-        }
+        #play-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--main-cyan); color: #fff; padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 0.7rem; transition: 0.3s; }
         #play-btn:hover { background: var(--main-cyan); color: #000; }
         #volume-slider { width: 100%; height: 3px; accent-color: var(--main-cyan); cursor: pointer; }
 
-        /* --- 3. 메인 콘텐츠 --- */
+        /* --- 메인 콘텐츠 --- */
         main { margin-left: 280px; width: calc(100% - 280px); padding: 5rem; min-height: 100vh; }
         .content-section { display: none; animation: fadeIn 0.6s ease forwards; }
         .content-section.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         h2.section-title { font-size: 3rem; margin-bottom: 3rem; border-left: 4px solid var(--main-cyan); padding-left: 20px; }
         h3.sub-title { font-size: 1.8rem; margin: 4rem 0 2rem 0; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
 
-        /* 세계관 설정 스타일 */
-        .world-image-container {
-            width: 100%; height: 450px;
-            background: #111; margin-bottom: 3rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
-        }
+        .world-image-container { width: 100%; height: 450px; background: #111; margin-bottom: 3rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
         .world-image-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
         
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
@@ -121,12 +165,8 @@
         .glass-card h3 { color: var(--main-cyan); margin-bottom: 1rem; font-size: 1.4rem; }
         .glass-card p { line-height: 1.7; color: #bbb; font-size: 0.95rem; }
 
-        /* 능력 및 시스템 */
         .system-visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .system-node {
-            background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent);
-            border: 1px solid var(--border); padding: 2rem; border-radius: 15px; position: relative; overflow: hidden; transition: 0.4s;
-        }
+        .system-node { background: linear-gradient(145deg, rgba(255,255,255,0.05), transparent); border: 1px solid var(--border); padding: 2rem; border-radius: 15px; position: relative; overflow: hidden; transition: 0.4s; }
         .system-node:hover { border-color: var(--main-cyan); transform: scale(1.02); }
         .node-tag { font-size: 0.7rem; color: var(--main-cyan); border: 1px solid var(--main-cyan); padding: 2px 8px; border-radius: 20px; margin-bottom: 15px; display: inline-block; }
         .node-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
@@ -135,7 +175,6 @@
 
         .sync-box { margin-top: 3rem; background: rgba(0, 242, 255, 0.05); border: 1px dashed var(--main-cyan); padding: 2.5rem; border-radius: 12px; }
 
-        /* 악귀 등급 스타일 */
         .grade-card { display: flex; gap: 30px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 25px; overflow: hidden; align-items: center; transition: 0.3s; }
         .grade-card:hover { border-color: var(--main-cyan); }
         .grade-img { width: 180px; height: 180px; background: #111; flex-shrink: 0; }
@@ -144,7 +183,6 @@
         .grade-label { font-weight: 900; font-size: 1.6rem; margin-bottom: 8px; display: block; color: var(--main-cyan); }
         .grade-label.danger { color: var(--danger-red); text-shadow: 0 0 10px rgba(255, 60, 60, 0.5); }
 
-        /* 등장인물 */
         .filter-bar { display: flex; gap: 15px; margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
         .filter-btn { background: none; border: none; color: #666; font-family: inherit; font-size: 1rem; cursor: pointer; transition: 0.3s; padding: 5px 15px; }
         .filter-btn:hover, .filter-btn.active { color: var(--main-cyan); font-weight: bold; }
@@ -158,7 +196,6 @@
         .char-card-name { font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
         .char-card-faction { font-size: 0.8rem; color: var(--main-cyan); letter-spacing: 1px; }
 
-        /* 캐릭터 상세 모달 */
         #char-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); z-index: 2000; display: none; justify-content: center; align-items: center; }
         #char-modal.active { display: flex; }
         .modal-box { width: 90%; max-width: 1100px; height: 550px; background: #0a0a0d; border: 1px solid var(--border); display: flex; border-radius: 4px; overflow: hidden; position: relative; }
@@ -173,31 +210,19 @@
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #444; z-index: 10; transition: 0.3s; }
         .close-btn:hover { color: #fff; }
 
-        /* 모바일 대응 */
         @media (max-width: 1024px) {
             body { flex-direction: column; }
-            aside {
-                width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border);
-                padding: 2rem;
-            }
+            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); padding: 2rem; }
             .logo { margin-bottom: 2rem; text-align: center; }
             .nav-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 1.5rem; }
             .nav-item { margin-bottom: 0; font-size: 0.95rem; }
-            .music-player { padding-top: 1rem; border-top: 1px solid var(--border); }
-            
             main { margin-left: 0; width: 100%; padding: 2.5rem 1.5rem; }
-            h2.section-title { font-size: 2.2rem; }
-            .world-image-container { height: 300px; }
-
-            .modal-box { flex-direction: column; height: 90vh; width: 95%; max-width: none; }
-            .modal-img-area { width: 100%; height: 450px; background: #000; }
-            .modal-img-area img { object-fit: contain; }
-            .modal-info-area { padding: 2rem; }
-            .m-name { font-size: 2rem; }
-
+            #intro-title { font-size: 3rem; letter-spacing: 0.8rem; margin-left: 0.8rem; }
+            #intro-subtitle { font-size: 0.9rem; letter-spacing: 0.8rem; margin-left: 0.8rem; }
+            .modal-box { flex-direction: column; height: 90vh; width: 95%; }
+            .modal-img-area { width: 100%; height: 450px; }
             .grade-card { flex-direction: column; align-items: flex-start; gap: 0; }
             .grade-img { width: 100%; height: auto; aspect-ratio: 16 / 9; }
-            .grade-img img { object-fit: contain; opacity: 1; }
         }
 
         ::-webkit-scrollbar { width: 4px; }
@@ -205,6 +230,12 @@
     </style>
 </head>
 <body>
+
+    <div id="intro-overlay">
+        <div class="intro-hanja-container" id="intro-hanja-container"></div>
+        <h1 id="intro-title">주박만상</h1>
+        <div id="intro-subtitle">呪縛萬象</div> <button class="enter-btn" id="enter-btn" onclick="igniteAndEnter()">입 장</button>
+    </div>
 
     <div class="hanja-bg" id="hanja-container"></div>
 
@@ -217,7 +248,6 @@
             <li class="nav-item" onclick="switchTab('characters', this)">등장인물</li>
         </ul>
 
-        <!-- BGM 컨트롤러 영역 -->
         <div class="music-player">
             <div class="music-info">SYSTEM AUDIO</div>
             <div class="controls">
@@ -229,7 +259,6 @@
     </aside>
 
     <main>
-        <!-- 세계관 설정 -->
         <section id="world" class="content-section active">
             <h2 class="section-title">세계관 설정</h2>
             <div class="world-image-container">
@@ -280,7 +309,6 @@
             </div>
         </section>
 
-        <!-- 능력 및 시스템 -->
         <section id="system" class="content-section">
             <h2 class="section-title">능력 및 시스템</h2>
             <div class="system-visual-grid">
@@ -323,7 +351,6 @@
             </div>
         </section>
 
-        <!-- 악귀 등급 -->
         <section id="grades" class="content-section">
             <h2 class="section-title">악귀 등급</h2>
             <div class="grade-card">
@@ -356,7 +383,6 @@
             </div>
         </section>
 
-        <!-- 등장인물 -->
         <section id="characters" class="content-section">
             <h2 class="section-title">등장인물</h2>
             <div class="filter-bar">
@@ -369,7 +395,6 @@
         </section>
     </main>
 
-    <!-- 캐릭터 상세 모달 -->
     <div id="char-modal">
         <div class="modal-box">
             <div class="close-btn" onclick="closeModal()">&times;</div>
@@ -386,9 +411,9 @@
     </div>
 
     <script>
-        // 1. 한자 애니메이션
         const hanjaList = ['呪', '縛', '萬', '象'];
         const container = document.getElementById('hanja-container');
+        
         function spawnHanja() {
             const h = document.createElement('div');
             h.className = 'hanja-char';
@@ -401,7 +426,46 @@
         }
         setInterval(spawnHanja, 1000);
 
-        // 2. 탭 제어
+        // --- 인트로 연출 로직 ---
+        const introHanjaContainer = document.getElementById('intro-hanja-container');
+        function spawnIntroHanja() {
+            const h = document.createElement('div');
+            h.className = 'hanja-char';
+            h.innerText = hanjaList[Math.floor(Math.random() * hanjaList.length)];
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 8 + 10) + 's';
+            h.style.fontSize = (Math.random() * 3 + 2) + 'rem';
+            introHanjaContainer.appendChild(h);
+            setTimeout(() => h.remove(), 12000);
+        }
+        const introInterval = setInterval(spawnIntroHanja, 800);
+
+        function igniteAndEnter() {
+            const overlay = document.getElementById('intro-overlay');
+            const title = document.getElementById('intro-title');
+            const subtitle = document.getElementById('intro-subtitle'); // 한자 서브타이틀 참조 추가
+            const btn = document.getElementById('enter-btn');
+            const audio = document.getElementById('bgm-audio');
+            const playBtn = document.getElementById('play-btn');
+            
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+            title.classList.add('burning');
+            subtitle.classList.add('burning'); // 한자 타이틀도 같이 불타게 추가
+
+            if (audio.paused) {
+                audio.play().catch(e => console.log("재생 오류:", e));
+                playBtn.innerText = "PAUSE";
+            }
+
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                clearInterval(introInterval);
+                setTimeout(() => overlay.remove(), 1500);
+            }, 1500);
+        }
+
+        // 탭 제어
         function switchTab(id, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
@@ -410,7 +474,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 3. BGM 제어 (수정됨: 첫 클릭 시 자동 재생 추가)
+        // BGM 제어
         const audio = document.getElementById('bgm-audio');
         const playBtn = document.getElementById('play-btn');
 
@@ -424,17 +488,14 @@
             }
         }
 
-        // 브라우저 정책상 첫 클릭 후 자동 재생
         document.addEventListener('click', function startBGM() {
-            if (audio.paused) {
-                toggleMusic();
-            }
+            if (audio.paused) { toggleMusic(); }
             document.removeEventListener('click', startBGM);
         }, { once: true });
 
         function setVolume(val) { audio.volume = val; }
 
-        // 4. 캐릭터 데이터
+        // 캐릭터 데이터
         const charData = [
             { name: "설도진", faction: "영대위", type: "구현계 (카타나)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%84%A4%EB%8F%84%EC%A7%8401.png", looks: "28세 / 181cm / 흑발 흰 브릿지 / 황안", personality: "냉소적 완벽주의. 싸가지 없음.", quote: "뒤지기 싫으면 비켜. 그냥 베면 되잖아." },
             { name: "녹영", faction: "영대위", type: "간섭계", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EB%85%B9%EC%98%8101.png", looks: "29세 / 178cm / 흑발 / 녹안 / 다크써클", personality: "항상 무표정. 정중하지만 서늘한 살기.", quote: "…그만 움직이세요. 추하니까." },
@@ -449,7 +510,6 @@
             { name: "칭", faction: "아나키스트", type: "변이계 (입)", img: "https://raw.githubusercontent.com/deokc/JUBAK/refs/heads/main/%EC%B9%AD01.png", looks: "미상 / 152cm / 흑발 양갈래 / 안대", personality: "령태. 말이 없음. 손짓 소통.", quote: "(묵묵히 안대 너머로 응시한다)" }
         ];
 
-        // 5. 캐릭터 렌더링
         const grid = document.getElementById('char-grid');
         function renderChars(filter = 'all') {
             grid.innerHTML = '';
@@ -469,7 +529,6 @@
             renderChars(faction);
         }
 
-        // 6. 모달 제어
         const modal = document.getElementById('char-modal');
         function openModal(data) {
             document.getElementById('m-img').src = data.img;
